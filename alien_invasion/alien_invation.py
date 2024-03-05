@@ -1,6 +1,9 @@
 import sys
 import pygame as pg
 
+from settings import Settings
+from ship import Ship
+
 class AlienInvasion:
     """
     Overall class to manage game assets and behavior.
@@ -11,13 +14,13 @@ class AlienInvasion:
         Initialize the game, and create the game resources
         """
         pg.init()
+        self.settings = Settings()
     
-        self.screen = pg.display.set_mode((1200, 800))   
+        self.screen = pg.display.set_mode(
+            (self.settings.screen_width, self.settings.screen_height)
+        )   
         pg.display.set_caption("Alien Invasion")
 
-        # Set background color
-        self.bg_color = (230, 230, 230)
-    
     def run_game(self) -> None:
         """
         Start the main loop for the game.
@@ -29,8 +32,8 @@ class AlienInvasion:
                     sys.exit()
             
             # Redraw the screen durring each pass through the loop
-            self.screen.fill(self.bg_color)
-            
+            self.screen.fill(self.settings.bg_color)
+
             # Make the most recently drawn screen visible.
             pg.display.flip()
 
