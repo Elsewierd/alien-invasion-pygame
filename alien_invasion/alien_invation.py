@@ -15,6 +15,7 @@ class AlienInvasion:
         """
         pg.init()
         self.settings = Settings()
+        self.ship = Ship(self)
     
         self.screen = pg.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height)
@@ -26,16 +27,33 @@ class AlienInvasion:
         Start the main loop for the game.
         """
         while True:
-            # Watch for keyboard and mouse events.
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    sys.exit()
-            
-            # Redraw the screen durring each pass through the loop
-            self.screen.fill(self.settings.bg_color)
+            self._check_events()
+            self.ship.update()
+            self._update_screen()
 
-            # Make the most recently drawn screen visible.
-            pg.display.flip()
+    def _check_events(self):
+        """Respond to keypresses and mouse events."""
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                sys.exit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_RIGHT:
+                    self.ship.moving_right = True
+                elif event.key == pg.K_LEFT:
+                    self.ship.moving_left = True
+            elif event.type == pg.pg.KEYUP:
+                if event.key == pg.K_RIGHT:
+                    self.ship.moving_right = False
+                elif event.key == pg.pg.K_LEFT:
+                    self.ship.moving_left = False
+
+    def _update_screen(self):
+        """Update images on the screen, and flip to the new screen."""
+        self.screen.fill(self.settings.bg_color)
+        self.ship.blitme()
+
+        pg.display.flip()
+
 
 if __name__=="__main__":
     # Make a game instance, and run the game.
