@@ -3,8 +3,9 @@ import pygame as pg
 
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
-class AlienInvasion:
+class AlienInvasion():
     """
     Overall class to manage game assets and behavior.
     """
@@ -22,9 +23,10 @@ class AlienInvasion:
         # )
         
         # sets fullscreen
-        self.screen = pg.display.set_mode((0,0), pg.fullscreen)
+        self.screen = pg.display.set_mode((0,0), pg.FULLSCREEN)
 
         self.ship = Ship(self)
+        self.bullets = pg.sprite.Group()
 
         pg.display.set_caption("Alien Invasion")
 
@@ -35,6 +37,7 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
+            self.bullets.update()
             self._update_screen()
 
     def _check_events(self):
@@ -59,6 +62,9 @@ class AlienInvasion:
         # left arrow
         elif event.key == pg.K_LEFT:
             self.ship.moving_left = True
+        # spacebar
+        elif event.key == pg.K_SPACE:
+            self._fire_bullet()
         # 'q'
         elif event.key == pg.K_q:
             sys.exit()
@@ -75,11 +81,17 @@ class AlienInvasion:
         # left arrow
         elif event.key == pg.K_LEFT:
             self.ship.moving_left = False
+        # spacebar
+        elif event.key == pg.K_SPACE:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
 
         pg.display.flip()
 
