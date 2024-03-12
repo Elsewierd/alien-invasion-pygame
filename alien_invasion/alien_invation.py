@@ -38,6 +38,12 @@ class AlienInvasion():
             self._check_events()
             self.ship.update()
             self.bullets.update()
+            # Get rid of bullets that have disappeared
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
+            print(len(self.bullets))
+            # Always last update
             self._update_screen()
 
     def _check_events(self):
@@ -47,7 +53,7 @@ class AlienInvasion():
                 sys.exit()
             elif event.type == pg.KEYDOWN:
                 self._check_keydown_events(event)
-            elif event.type == pg.pg.KEYUP:
+            elif event.type == pg.KEYUP:
                 self._check_keyup_events(event)
 
     def _check_keydown_events(self, event):
@@ -81,10 +87,12 @@ class AlienInvasion():
         # left arrow
         elif event.key == pg.K_LEFT:
             self.ship.moving_left = False
-        # spacebar
-        elif event.key == pg.K_SPACE:
-            new_bullet = Bullet(self)
-            self.bullets.add(new_bullet)
+
+    def _fire_bullet(self):
+        """Create a new bullet and add it to bullet group
+        """
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
