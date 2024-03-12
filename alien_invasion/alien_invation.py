@@ -15,11 +15,17 @@ class AlienInvasion:
         """
         pg.init()
         self.settings = Settings()
+        
+        # sets windowed screen
+        # self.screen = pg.display.set_mode(
+        #     (self.settings.screen_width, self.settings.screen_height)
+        # )
+        
+        # sets fullscreen
+        self.screen = pg.display.set_mode((0,0), pg.fullscreen)
+
         self.ship = Ship(self)
-    
-        self.screen = pg.display.set_mode(
-            (self.settings.screen_width, self.settings.screen_height)
-        )   
+
         pg.display.set_caption("Alien Invasion")
 
     def run_game(self) -> None:
