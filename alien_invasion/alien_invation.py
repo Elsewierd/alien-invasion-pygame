@@ -4,6 +4,7 @@ import pygame as pg
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 class AlienInvasion():
     """
@@ -25,8 +26,11 @@ class AlienInvasion():
         # sets fullscreen
         self.screen = pg.display.set_mode((0,0), pg.FULLSCREEN)
 
+        # asset instances
         self.ship = Ship(self)
         self.bullets = pg.sprite.Group()
+        self.aliens = pg.sprite.Group()
+        self._create_fleet()
 
         pg.display.set_caption("Alien Invasion")
 
@@ -94,12 +98,29 @@ class AlienInvasion():
         new_bullet = Bullet(self)
         self.bullets.add(new_bullet)
 
+    def _create_fleet(self):
+        """Creates a fleet of aliens by populating self.aliens:Group
+        """
+        # New Alien instance
+        alien = Alien(self)
+        # Determine the number of aliens per row
+        alien_width = alien.rect.width
+        availble_space_x = self.settings.screen_width - (2 * alien_width)
+        aliens_per_row = availble_space_x // (2 * alien_width)
+        # Create a row of aliens
+        for alien_number in range(aliens_per_row):
+            alien = Alien(self)
+            alien.x = alien_width + 2 * alien_width * alien_number
+            # Add to Group
+            self.aliens.add(alien)
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        self.aliens.draw(self.screen)
 
         pg.display.flip()
 
