@@ -88,11 +88,27 @@ class AlienInvasion():
         elif event.key == pg.K_LEFT:
             self.ship.moving_left = False
 
+    def _check_fleet_edges(self):
+        """Responds if any alien reaches an edge
+        """
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Drop the entire fleet and change the fleet's direction
+        """
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+
     def _fire_bullet(self):
         """Create a new bullet and add it to bullet group
         """
-        new_bullet = Bullet(self)
-        self.bullets.add(new_bullet)
+        if self.bullets.__len__ < self.settings.bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
 
     def _update_bullets(self):
         """Updates the position of bullets, removes the bullets that have exited the screen
@@ -137,8 +153,9 @@ class AlienInvasion():
                 self._create_alien(alien_number, row_number)
 
     def _update_aliens(self):
-        """Update the positions of all the aliens in the fleet
+        """Checks if the fleet is at the edge, updates the positions of all the aliens in the fleet
         """
+        self._check_fleet_edges()
         self.aliens.update()
 
     def _update_screen(self):
