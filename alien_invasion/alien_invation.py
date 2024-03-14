@@ -120,7 +120,12 @@ class AlienInvasion():
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
-        # ! DEBUG print(len(self.bullets))
+        # Check for bullet and alien collision, removing both if true
+        collisions = pg.sprite.groupcollide(self.bullets, self.aliens, True, True)
+        if not self.aliens:
+            # Destroy bullets and create a new fleet
+            self.bullets.empty()
+            self._create_fleet()
     
     def _create_alien(self, alien_number, row_number):
         """Create an alien and place it in a row
