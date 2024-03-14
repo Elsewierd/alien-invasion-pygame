@@ -1,7 +1,9 @@
 import sys
+from time import sleep
 import pygame as pg
 
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -13,8 +15,11 @@ class AlienInvasion():
     def __init__(self) -> None:
         """Initialize the game, and create the game resources
         """
+        # pygame initialization
         pg.init()
+        # settings and stats initialization
         self.settings = Settings()
+        self.stats = GameStats(self)
         
         # sets windowed screen
         # self.screen = pg.display.set_mode(
