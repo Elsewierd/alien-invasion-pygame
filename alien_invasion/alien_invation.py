@@ -112,6 +112,17 @@ class AlienInvasion():
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
 
+    def _check_bullet_alien_collisions(self):
+        """Responds to bullet-alien collisions
+        """
+        # Remove any bullets and aliens that collided
+        collisions = pg.sprite.groupcollide(self.bullets, self.aliens, True, True)
+        
+        if not self.aliens:
+            # Destroy bullets and create a new fleet
+            self.bullets.empty()
+            self._create_fleet()
+
     def _update_bullets(self):
         """Updates the position of bullets, removes the bullets that have exited the screen
         """
@@ -121,11 +132,8 @@ class AlienInvasion():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
         # Check for bullet and alien collision, removing both if true
-        collisions = pg.sprite.groupcollide(self.bullets, self.aliens, True, True)
-        if not self.aliens:
-            # Destroy bullets and create a new fleet
-            self.bullets.empty()
-            self._create_fleet()
+        self._check_bullet_alien_collisions()
+        
     
     def _create_alien(self, alien_number, row_number):
         """Create an alien and place it in a row
