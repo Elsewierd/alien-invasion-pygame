@@ -123,6 +123,11 @@ class AlienInvasion():
             self.bullets.empty()
             self._create_fleet()
 
+    def _check_ship_alien_collisions(self):
+        """Responds to ship-alien collisions
+        """
+        return pg.sprite.spritecollideany(self.ship, self.aliens)
+
     def _update_bullets(self):
         """Updates the position of bullets, removes the bullets that have exited the screen
         """
@@ -172,6 +177,10 @@ class AlienInvasion():
         """
         self._check_fleet_edges()
         self.aliens.update()
+        # ship-alien collision
+        if self._check_ship_alien_collisions():
+            print("Ship hit!")
+            # TODO: Add a reset for the current fleet
 
 
     def _update_screen(self):
